@@ -1,0 +1,5 @@
+,"test NDCG@10, short lists"
+random,0.5332990086892416
+past project (as reported),0.5684
+popularity,0.7375107113833607
+"lightgbm, tuned",0.7800964736304147
