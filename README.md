@@ -13,11 +13,11 @@ We re-rank the products JD shows for each search (median 90 per list) using the 
 | NMF (Neural MF) | Baseline | 0.3267 | step 3 |
 | NCF | Baseline | 0.3290 | step 3 |
 | Popularity (90-day add-to-carts) | Baseline | 0.3329 | step 3 |
-| KGIN, without features | Advanced | 0.3541 | step 4b |
-| Features MLP (28 features only) | Advanced | 0.4021 | step 4b |
-| LSTM + attention | Advanced | 0.4033 | step 4c |
-| **KGIN + features** | Advanced | **0.4060** | step 4b |
-| **LightGBM** | Advanced | **0.4063** | step 4a |
+| KGIN, without features | Advanced | 0.3541 | step 4 |
+| Features MLP (28 features only) | Advanced | 0.4021 | step 4 |
+| LSTM + attention | Advanced | 0.4033 | step 4 |
+| **KGIN + features** | Advanced | **0.4060** | step 4 |
+| **LightGBM** | Advanced | **0.4063** | step 4 |
 
 LightGBM and KGIN + features are tied (paired test, p = 0.78). Both beat popularity by 0.073 and the LSTM by 0.003 (p < 0.001).
 
@@ -30,12 +30,12 @@ Run in this order. Each notebook reads the earlier steps' outputs from Google Dr
 | 1 | `step1_data_preprocess.ipynb` | Raw files → 5 tables; shuffles every list; 70/15/15 split | CPU | `processed/` |
 | 2 | `step2_feature_engineering.ipynb` | 28 features (plus 8 same-day features, used only in one check) | CPU | `features/` |
 | 3 | `step3_baselines.ipynb` | Random, popularity, MF, NCF, NMF, and why they fall short | T4 GPU | `baselines/` |
-| 4a | `step4_lightgbm.ipynb` | LightGBM (LambdaRank) on the 28 features | CPU | `lightgbm/` |
-| 4b | `step4_kgin.ipynb` | KGIN, with and without the 28 features | T4 GPU | `model/` |
-| 4c | `step4_lstm_attention.ipynb` | LSTM over the user's history, with attention per shown product | T4 GPU | `advanced/` |
-| 5 | `step5_compare_models.ipynb` | Paired tests and segments for steps 4a–4c (no retraining) | CPU | `comparison/` |
+| 4 | `step4_lightgbm.ipynb` | LightGBM (LambdaRank) on the 28 features | CPU | `lightgbm/` |
+| 4 | `step4_kgin.ipynb` | KGIN, with and without the 28 features | T4 GPU | `model/` |
+| 4 | `step4_lstm_attention.ipynb` | LSTM over the user's history, with attention per shown product | T4 GPU | `advanced/` |
+| 5 | `step5_compare_models.ipynb` | Paired tests and segments for the three step 4 models (no retraining) | CPU | `comparison/` |
 
-Steps 4a–4c can run in any order after steps 1–3. Step 5 runs last.
+The three step 4 notebooks can run in any order after steps 1–3. Step 5 runs last.
 
 ## Data
 
@@ -45,11 +45,11 @@ Steps 4a–4c can run in any order after steps 1–3. Step 5 runs last.
 ## How to run
 
 1. Put the two raw files in `MyDrive/BT4222_Group10_JDSearch/Raw Data/`.
-2. Open a notebook in Colab (**File → Upload notebook**). For steps 3, 4b and 4c, choose **Runtime → Change runtime type → T4 GPU**.
+2. Open a notebook in Colab (**File → Upload notebook**). For `step3_baselines`, `step4_kgin` and `step4_lstm_attention`, choose **Runtime → Change runtime type → T4 GPU**.
 3. Click **Runtime → Run all** and allow Drive access.
 4. Repeat for each notebook, in the order above.
 
-Step 4b takes longest: about 1¼ hours on a T4. Step 4a's saved outputs come from a local run of the same code; outside Colab it reads files from its own folder.
+`step4_kgin` takes longest: about 1¼ hours on a T4. `step4_lightgbm`'s saved outputs come from a local run of the same code; outside Colab it reads files from its own folder.
 
 ## Evaluation (same in every notebook)
 
@@ -68,9 +68,9 @@ BT4222_Group10_JDSearch/
 ├── processed/   step 1 tables (searches, exposures, history, products, titles)
 ├── features/    step 2 features, one file per group
 ├── baselines/   step 3 scores, results, MF / NCF / NMF weights
-├── lightgbm/    step 4a models, scores, results
-├── model/       step 4b (KGIN) weights, scores, results, ablations
-├── advanced/    step 4c (LSTM) weights, scores, results, ablations
+├── lightgbm/    step 4 LightGBM: models, scores, results
+├── model/       step 4 KGIN: weights, scores, results, ablations
+├── advanced/    step 4 LSTM: weights, scores, results, ablations
 ├── comparison/  step 5 results, paired tests, segments
 └── step*.ipynb  copies of the notebooks
 ```
